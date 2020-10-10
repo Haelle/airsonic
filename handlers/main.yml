@@ -1,0 +1,6 @@
+---
+- name: reload service
+  service:
+    name: '{{ airsonic_service_name }}'
+    state: restarted
+    enabled: 'yes'

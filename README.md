@@ -4,6 +4,13 @@ Install [Docker Airsonic Advanced](https://hub.docker.com/r/airsonicadvanced/air
 
 Warning: restarting Airsonic on a Raspberry Pi can take 3 min
 
+If there is a problem with Airsonic try to see with:
+
+```sh
+cd /var/airsonic
+sudo -u airsonic java -jar airsonic.war
+```
+
 ## Nginx reverse proxy
 Here is an example of configuration for Nginx :
 
@@ -78,6 +85,12 @@ ansible-galaxy collection install -r requirements.yml
   become: 'yes'
   roles:
     role: airsonic
+```
+
+Run with an inventory like this
+
+```sh
+ansible-playbook playbook.yml -i inventory/hosts
 ```
 
 ## Linters

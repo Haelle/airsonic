@@ -1,0 +1,19 @@
+---
+- name: Update sources.list with Stretch backports
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: 'stretch-backports'
+    insertafter: EOF
+    line: 'deb [trusted=yes] http://deb.debian.org/debian stretch-backports main'
+
+- name: Install Java 11 from backports
+  apt:
+    name: openjdk-11-jdk
+    state: present
+    default_release: stretch-backports
+    update_cache: 'yes'
+
+- name: Use the correct version of Java
+  community.general.alternatives:
+    name: java
+    path: /usr/lib/jvm/java-11-openjdk-armhf/bin/java

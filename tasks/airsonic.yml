@@ -1,0 +1,81 @@
+---
+- name: Create group {{ airsonic_group }}
+  group:
+    name: '{{ airsonic_group }}'
+
+- name: Create user {{ airsonic_user }}
+  user:
+    name: '{{ airsonic_user }}'
+    group: '{{ airsonic_group }}'
+    create_home: 'no'
+
+- name: Create Airsonic directory
+  file:
+    path: '{{ airsonic_dir }}'
+    owner: '{{ airsonic_user }}'
+    group: '{{ airsonic_group }}'
+    mode: '0755'
+    state: directory
+
+- name: Check if airsonic.war exists
+  stat:
+    path: '{{ airsonic_dir }}/airsonic.war'
+  register: airsonic_war
+
+- name: Download Airsonic war 10.6.2
+  get_url:
+    url: https://github.com/airsonic/airsonic/releases/download/v10.6.2/airsonic.war
+    dest: '{{ airsonic_dir }}'
+    owner: '{{ airsonic_user }}'
+    group: '{{ airsonic_group }}'
+    mode: '0644'
+    force: 'no'
+  when: not airsonic_war.stat.exists
+  notify: reload service
+
+- name: Check if airsonic.service exists
+  stat:
+    path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
+  register: airsonic_service
+
+- name: Download systemd service
+  get_url:
+    url: https://raw.githubusercontent.com/airsonic/airsonic/master/contrib/airsonic.service
+    dest: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
+    force: 'no'
+  when: not airsonic_service.stat.exists
+  notify: reload service
+
+- name: Modify systemd default config
+  lineinfile:
+    path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
+    regexp: 'Dserver.servlet.contextPath'
+    state: absent
+  notify: reload service
+
+- name: Download systemd-env
+  get_url:
+    url: https://raw.githubusercontent.com/airsonic/airsonic/master/contrib/airsonic-systemd-env
+    dest: '{{ airsonic_systemd_env }}/airsonic'
+    force: 'no'
+  notify: reload service
+
+- name: Install ffmpeg
+  apt:
+    name: ffmpeg
+    state: present
+
+- name: Create transcoder directory
+  file:
+    path: '{{ airsonic_dir }}/transcode'
+    owner: '{{ airsonic_user }}'
+    group: '{{ airsonic_group }}'
+    mode: '0755'
+    state: directory
+
+- name: Make ffmpeg the default transcoder
+  file:
+    src: /usr/bin/ffmpeg
+    path: '{{ airsonic_dir }}/transcode/ffmpeg'
+    state: link
+  notify: reload service

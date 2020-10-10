@@ -1,0 +1,7 @@
+---
+airsonic_user: airsonic
+airsonic_group: airsonic
+airsonic_dir: /var/airsonic
+airsonic_service_path: /etc/systemd/system
+airsonic_service_name: airsonic.service
+airsonic_systemd_env: /etc/default
