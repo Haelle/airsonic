@@ -34,10 +34,17 @@
     force: 'no'
   notify: reload service
 
-- name: Modify systemd default config
+- name: Systemd remove Context-Path from command line
   lineinfile:
     path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
     regexp: 'Dserver.servlet.context-path'
+    state: absent
+  notify: reload service
+
+- name: Systemd remove Context-Path from environnement
+  lineinfile:
+    path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
+    regexp: 'CONTEXT_PATH='
     state: absent
   notify: reload service
 
