@@ -24,7 +24,7 @@
 
 - name: Download Airsonic war 10.6.2
   get_url:
-    url: https://github.com/airsonic/airsonic/releases/download/v10.6.2/airsonic.war
+    url: https://github.com/airsonic-advanced/airsonic-advanced/releases/download/11.0.0-SNAPSHOT.20201007202626/airsonic.war
     dest: '{{ airsonic_dir }}'
     owner: '{{ airsonic_user }}'
     group: '{{ airsonic_group }}'
@@ -40,7 +40,7 @@
 
 - name: Download systemd service
   get_url:
-    url: https://raw.githubusercontent.com/airsonic/airsonic/master/contrib/airsonic.service
+    url: https://raw.githubusercontent.com/airsonic-advanced/airsonic-advanced/master/contrib/airsonic.service
     dest: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
     force: 'no'
   when: not airsonic_service.stat.exists
@@ -55,7 +55,7 @@
 
 - name: Download systemd-env
   get_url:
-    url: https://raw.githubusercontent.com/airsonic/airsonic/master/contrib/airsonic-systemd-env
+    url: https://raw.githubusercontent.com/airsonic-advanced/airsonic-advanced/master/contrib/airsonic-systemd-env
     dest: '{{ airsonic_systemd_env }}/airsonic'
     force: 'no'
   notify: reload service
