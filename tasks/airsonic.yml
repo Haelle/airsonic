@@ -48,6 +48,16 @@
     state: absent
   notify: reload service
 
+- name: Add auto restart in config
+  blockinfile:
+    path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
+    block: |
+      Restart=on-failure
+      RestartSec=5s
+    insertafter: '[Service]'
+    marker: "# {mark} ANSIBLE RESTART BLOCK"
+  notify: reload service
+
 - name: Download systemd-env
   get_url:
     url: https://raw.githubusercontent.com/airsonic-advanced/airsonic-advanced/master/contrib/airsonic-systemd-env
