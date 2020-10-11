@@ -37,7 +37,7 @@
 - name: Modify systemd default config
   lineinfile:
     path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
-    regexp: 'Dserver.servlet.contextPath'
+    regexp: 'Dserver.servlet.context-path'
     state: absent
   notify: reload service
 
