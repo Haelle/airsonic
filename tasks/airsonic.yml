@@ -17,11 +17,6 @@
     mode: '0755'
     state: directory
 
-- name: Check if airsonic.war exists
-  stat:
-    path: '{{ airsonic_dir }}/airsonic.war'
-  register: airsonic_war
-
 - name: Download Airsonic war 10.6.2
   get_url:
     url: https://github.com/airsonic-advanced/airsonic-advanced/releases/download/11.0.0-SNAPSHOT.20201007202626/airsonic.war
@@ -30,20 +25,13 @@
     group: '{{ airsonic_group }}'
     mode: '0644'
     force: 'no'
-  when: not airsonic_war.stat.exists
   notify: reload service
-
-- name: Check if airsonic.service exists
-  stat:
-    path: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
-  register: airsonic_service
 
 - name: Download systemd service
   get_url:
     url: https://raw.githubusercontent.com/airsonic-advanced/airsonic-advanced/master/contrib/airsonic.service
     dest: '{{ airsonic_service_path }}/{{ airsonic_service_name }}'
     force: 'no'
-  when: not airsonic_service.stat.exists
   notify: reload service
 
 - name: Modify systemd default config
